@@ -26,14 +26,12 @@ namespace RequestForm.BLL.Services
 
         public RequestDTO GetRequestId(int? id)
         {
-            if (id == null)
-                throw new ValidationException("Нет такого номера заявки", "");
 
             var request = db.Requests.GetId(id.Value).FirstOrDefault();
             if (request == null)
-                throw new ValidationException("Такой заявки нет", "");
+                return null;
 
-            return new RequestDTO
+            return  new RequestDTO
             {
                 DateTime = request.DateTime,
                 Email = request.Email,
@@ -65,13 +63,20 @@ namespace RequestForm.BLL.Services
             db.Save();
         }
 
-        public void DeleteRequest(int number)
+        public bool DeleteRequest(int number)
         {
             Request request = db.Requests.GetId(number).FirstOrDefault();
+            if (request == null)
+                return false;
 
             db.Requests.Delete(request);
             db.Save();
+            return true;
         }
+
+
+
+
 
         public void UpdateRequest(RequestDTO requestDTO)
         {

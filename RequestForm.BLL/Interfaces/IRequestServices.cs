@@ -12,7 +12,7 @@ namespace RequestForm.BLL.Interfaces
         IEnumerable<RequestDTO> GetAll();
         RequestDTO GetRequestId(int? id);
         void CreateRequest(RequestDTO request);
-        void DeleteRequest(int number);
+        bool DeleteRequest(int number);
         void UpdateRequest(RequestDTO requestDTO);
     }
 }

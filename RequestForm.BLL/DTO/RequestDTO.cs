@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace RequestForm.BLL.DTO
 {
+    /// <summary>
+    /// Информация о заявке
+    /// </summary>
     public class RequestDTO
     {
-        //public int Id { get; set; }
         public int Number { get; set; }
         public DateTime DateTime { get; set; }
         public string Name { get; set; }

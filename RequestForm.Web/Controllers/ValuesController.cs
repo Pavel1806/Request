@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RequestForm.BLL.DTO;
 using RequestForm.BLL.Interfaces;
+using RequestForm.Web.ErrorHandling;
 using RequestForm.Web.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -31,8 +32,8 @@ namespace RequestForm.Web.Controllers
         /// <returns>
         /// Список заявок с информацией о них.
         /// </returns>
-        /// <response code="200">Запрос вполнился успешно, данные возвращены</response>
-        /// <response code="204">Запрос вполнился успешно, данные не возвращены</response>
+        /// <response code="200">Запрос выполнился успешно, данные возвращены</response>
+        /// <response code="204">Запрос выполнился успешно, данные не возвращены</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -45,22 +46,48 @@ namespace RequestForm.Web.Controllers
         /// Получить заявку по номеру
         /// </summary>
         /// <remarks>
-        /// GET /api/values/
+        /// GET /api/values/{номер заявки}
         /// </remarks>
         /// <returns>
         /// Одна заяка с информацией о ней.
         /// </returns>
-        /// <response code="200">Запрос вполнился успешно, данные возвращены</response>
-        /// <response code="204">Запрос вполнился успешно, данные не возвращены</response>
+        /// <response code="200">Запрос выполнился успешно, данные возвращены</response>
+        /// <response code="204">Запрос выполнился успешно, данные не возвращены</response>
+        /// <response code="404">Данные не найдены</response>
+        /// <response code="500">Ошибка на сервере</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public RequestDTO GetRequestId(int id)
         {
-            return _requestServices.GetRequestId(id);
+            var request =  _requestServices.GetRequestId(id);
+
+            if (request == null)
+            {
+                throw new HttpResponseException
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Value = $"Заявки с номером {id} не существует"
+                };
+            }
+            return request;
         }
 
+
+        /// <summary>
+        /// Создать заявку
+        /// </summary>
+        /// <remarks>
+        /// POST /api/values/
+        /// </remarks>
+        /// <response code="200">Запрос выполнился успешно, запись создана</response>
+        /// <response code="400">Некорректные данные</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public void CreatRequest(RequestViewModel request)
         {
             var requestDTO = new RequestDTO
@@ -68,19 +95,52 @@ namespace RequestForm.Web.Controllers
                 Name = request.Name,
                 SerName = request.SerName,
                 Email = request.Email,
-                //Number = request.Number,
                 Position = request.Position
             };
             _requestServices.CreateRequest(requestDTO);
         }
 
+        /// <summary>
+        /// Удалить заявку
+        /// </summary>
+        /// <remarks>
+        /// DELETE /api/values/{номер заявки}
+        /// </remarks>
+        /// <response code="200">Запрос выполнился успешно, запись удалена</response>
+        /// <response code="404">Данные не найдены</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpDelete("{id}")]
-        public void CreatRequest(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public void DeleteRequest(int id)
         {
-            _requestServices.DeleteRequest(id);
+            var request = _requestServices.DeleteRequest(id);
+
+
+            if (request == false)
+            {
+                throw new HttpResponseException
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Value = $"Заявки с номером {id} не существует"
+                };
+            }
+            
         }
 
+        /// <summary>
+        /// Корректировать заявку
+        /// </summary>
+        /// <remarks>
+        /// PUT /api/values/
+        /// </remarks>
+        /// <response code="200">Запрос выполнился успешно, данные возвращены</response>
+        /// <response code="204">Запрос выполнился успешно, данные не возвращены</response>
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public void UpdateRequest(RequestDTO requestDTO)
         {
 
