@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RequestForm.BLL.DTO;
@@ -37,9 +38,12 @@ namespace RequestForm.Web.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IEnumerable<RequestDTO> GetAll()
+        public IEnumerable<ModelEditRequest> GetAll()
         {
-            return _requestServices.GetAll();
+            var map = new MapperConfiguration(x => x.CreateMap<RequestDTO, ModelEditRequest>()).CreateMapper();
+            return map.Map<IEnumerable<RequestDTO>, IEnumerable<ModelEditRequest>>(_requestServices.GetAll());
+
+            //return _requestServices.GetAll();
         }
 
         /// <summary>
@@ -59,7 +63,7 @@ namespace RequestForm.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public RequestDTO GetRequestId(int id)
+        public ModelEditRequest GetRequestId(int id)
         {
             var request =  _requestServices.GetRequestId(id);
 
@@ -71,7 +75,15 @@ namespace RequestForm.Web.Controllers
                     Value = $"Заявки с номером {id} не существует"
                 };
             }
-            return request;
+
+            return new ModelEditRequest {
+                DateTime = request.DateTime,
+                Number = request.Number,
+                Name = request.Name,
+                SerName = request.SerName,
+                Email = request.Email,
+                Position = request.Position
+            };
         }
 
 
@@ -86,10 +98,11 @@ namespace RequestForm.Web.Controllers
         /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public void CreatRequest(RequestViewModel request)
         {
+
             var requestDTO = new RequestDTO
             {
                 Name = request.Name,
@@ -137,14 +150,37 @@ namespace RequestForm.Web.Controllers
         /// </remarks>
         /// <response code="200">Запрос выполнился успешно, данные возвращены</response>
         /// <response code="204">Запрос выполнился успешно, данные не возвращены</response>
+        /// <response code="400">Некорректные данные</response>
+        /// <response code="404">Данные не найдены</response>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public void UpdateRequest(RequestDTO requestDTO)
+        public void UpdateRequest(ModelEditRequest request)
         {
 
-            _requestServices.UpdateRequest(requestDTO);
+            var requestDTO = new RequestDTO
+            {
+                DateTime=request.DateTime,
+                Number=request.Number,
+                Name = request.Name,
+                SerName = request.SerName,
+                Email = request.Email,
+                Position = request.Position
+            };
+
+            var req = _requestServices.UpdateRequest(requestDTO);
+
+            if (req == false)
+            {
+                throw new HttpResponseException
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Value = $"Заявки с номером {request.Number} не существует"
+                };
+            }
+
         }
 
     }

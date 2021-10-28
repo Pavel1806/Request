@@ -13,6 +13,6 @@ namespace RequestForm.BLL.Interfaces
         RequestDTO GetRequestId(int? id);
         void CreateRequest(RequestDTO request);
         bool DeleteRequest(int number);
-        void UpdateRequest(RequestDTO requestDTO);
+        bool UpdateRequest(RequestDTO requestDTO);
     }
 }

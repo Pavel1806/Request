@@ -12,18 +12,21 @@ namespace RequestForm.Web.ErrorHandling
     {
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            //if (!context.ModelState.IsValid)
+            //{
+            //    context.Result = new BadRequestObjectResult(context.ModelState);
+            //}
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
             if (context.Exception is HttpResponseException httpResponseException)
             {
-                context.Result = new ObjectResult(httpResponseException.Value)
-                {
-                    StatusCode = httpResponseException.Status
-                };
-
-                context.ExceptionHandled = true;
+                        context.Result = new ObjectResult(httpResponseException.Value)
+                        {
+                            StatusCode = httpResponseException.Status
+                        };
+                       context.ExceptionHandled = true;
             }
             else if (context.Exception != null)
             {
@@ -33,6 +36,14 @@ namespace RequestForm.Web.ErrorHandling
                 };
                 context.ExceptionHandled = true;
             }
+            //else if (context.Exception != null)
+            //{
+            //    context.Result = new ObjectResult(context.Exception.Message)
+            //    {
+            //        StatusCode = StatusCodes.Status400BadRequest
+            //    };
+            //    context.ExceptionHandled = true;
+            //}
         }
 
         public int Order { get; set; } = int.MaxValue - 10;

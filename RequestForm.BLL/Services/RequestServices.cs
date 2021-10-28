@@ -44,8 +44,10 @@ namespace RequestForm.BLL.Services
 
         public void CreateRequest(RequestDTO requestDTO)
         {
-            Request req = db.Requests.LastRequestId();
 
+            //throw new Exception("Здесь очень много технической информации");
+
+            Request req = db.Requests.LastRequestId();
 
             var request = new Request
             {
@@ -78,9 +80,12 @@ namespace RequestForm.BLL.Services
 
 
 
-        public void UpdateRequest(RequestDTO requestDTO)
+        public bool UpdateRequest(RequestDTO requestDTO)
         {
             var request = db.Requests.GetId(requestDTO.Number).FirstOrDefault();
+
+            if (request == null)
+                return false;
 
             request.Name = requestDTO.Name;
             request.SerName = requestDTO.SerName;
@@ -88,6 +93,7 @@ namespace RequestForm.BLL.Services
             request.Position = requestDTO.Position;
 
             db.Save();
+            return true;
         }
     }
 }
