@@ -18,7 +18,7 @@ namespace RequestForm.DAL.Repositories
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<Request> GetAll()
+        public List<Request> GetAll()
         {
             return _appDbContext.Requests.OrderBy(x => x.Id).ToList<Request>();
         }

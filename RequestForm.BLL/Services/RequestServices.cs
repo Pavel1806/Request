@@ -20,8 +20,30 @@ namespace RequestForm.BLL.Services
         }
         public IEnumerable<RequestDTO> GetAll()
         {
-            var map = new MapperConfiguration(x => x.CreateMap<Request, RequestDTO>()).CreateMapper();
-            return map.Map<IEnumerable<Request>, IEnumerable<RequestDTO>>(db.Requests.GetAll());
+
+
+            //var map = new MapperConfiguration(x => x.CreateMap<Request, RequestDTO>()).CreateMapper();
+            //var rt = map.Map<IEnumerable<Request>, IEnumerable<RequestDTO>>(db.Requests.GetAll());
+            List<Request> requests = db.Requests.GetAll();
+
+            List<RequestDTO> request = new List<RequestDTO>();
+            
+
+            for(int i=0; i<requests.Count(); i++)
+            {
+                request.Add(new RequestDTO() {
+                    Email = requests[i].Email,
+                    DateTime = $"{requests[i].DateTime.Day}-{requests[i].DateTime.Month}-{requests[i].DateTime.Year}",
+                    Name = requests[i].Name,
+                    Number = requests[i].Number,
+                    SerName = requests[i].SerName,
+                    Position = requests[i].Position
+
+            });
+
+                
+            }
+            return request;
         }
 
         public RequestDTO GetRequestId(int? id)
@@ -33,7 +55,7 @@ namespace RequestForm.BLL.Services
 
             return  new RequestDTO
             {
-                DateTime = request.DateTime,
+                DateTime = $"{request.DateTime.Day}-{request.DateTime.Month}-{request.DateTime.Year}",
                 Email = request.Email,
                 Name = request.Name,
                 Number = request.Number,

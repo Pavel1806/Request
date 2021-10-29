@@ -162,7 +162,7 @@ namespace RequestForm.Web.Controllers
 
             var requestDTO = new RequestDTO
             {
-                DateTime=request.DateTime,
+                //DateTime=request.DateTime,
                 Number=request.Number,
                 Name = request.Name,
                 SerName = request.SerName,

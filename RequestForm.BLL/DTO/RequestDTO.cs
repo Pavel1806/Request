@@ -12,7 +12,7 @@ namespace RequestForm.BLL.DTO
     public class RequestDTO
     {
         public int Number { get; set; }
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
         public string Name { get; set; }
         public string SerName { get; set; }
         public string Position { get; set; }

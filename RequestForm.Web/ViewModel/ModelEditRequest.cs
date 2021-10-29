@@ -21,8 +21,8 @@ namespace RequestForm.Web.ViewModel
         /// Дата создания заявки
         /// </summary>
         /// 
-        [Required]
-        public DateTime DateTime { get; set; }
+        
+        public string DateTime { get; set; }
         /// <summary>
         /// Имя 
         /// </summary>
