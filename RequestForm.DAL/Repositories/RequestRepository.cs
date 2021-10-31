@@ -23,7 +23,7 @@ namespace RequestForm.DAL.Repositories
             return _appDbContext.Requests.OrderBy(x => x.Id).ToList<Request>();
         }
 
-        public IEnumerable<Request> GetId(int id)
+        public IEnumerable<Request> GetById(int id)
         {
             return _appDbContext.Requests.Where(x => x.Number == id);
         }

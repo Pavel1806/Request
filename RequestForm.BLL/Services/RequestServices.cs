@@ -46,7 +46,7 @@ namespace RequestForm.BLL.Services
         public RequestDTO GetRequestId(int? id)
         {
 
-            var request = db.Requests.GetId(id.Value).FirstOrDefault();
+            var request = db.Requests.GetById(id.Value).FirstOrDefault();
             if (request == null)
                 return null;
 
@@ -84,7 +84,7 @@ namespace RequestForm.BLL.Services
 
         public bool DeleteRequest(int number)
         {
-            Request request = db.Requests.GetId(number).FirstOrDefault();
+            Request request = db.Requests.GetById(number).FirstOrDefault();
             if (request == null)
                 return false;
 
@@ -95,7 +95,7 @@ namespace RequestForm.BLL.Services
 
         public bool UpdateRequest(RequestDTO requestDTO)
         {
-            var request = db.Requests.GetId(requestDTO.Number).FirstOrDefault();
+            var request = db.Requests.GetById(requestDTO.Number).FirstOrDefault();
 
             if (request == null)
                 return false;

@@ -10,7 +10,7 @@ namespace RequestForm.DAL.Interfaces
     public interface IRepository<T>
     {
         List<T> GetAll();
-        IEnumerable<T> GetId(int id);
+        IEnumerable<T> GetById(int id);
         void Create(Request request);
         void Delete(Request request);
         void Update(Request request);
