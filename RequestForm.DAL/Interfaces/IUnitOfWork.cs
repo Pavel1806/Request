@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RequestForm.DAL.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IRepository<Request> Requests { get; }
         void Save();

@@ -21,9 +21,6 @@ namespace RequestForm.BLL.Services
         public IEnumerable<RequestDTO> GetAll()
         {
 
-
-            //var map = new MapperConfiguration(x => x.CreateMap<Request, RequestDTO>()).CreateMapper();
-            //var rt = map.Map<IEnumerable<Request>, IEnumerable<RequestDTO>>(db.Requests.GetAll());
             List<Request> requests = db.Requests.GetAll();
 
             List<RequestDTO> request = new List<RequestDTO>();
@@ -67,8 +64,6 @@ namespace RequestForm.BLL.Services
         public void CreateRequest(RequestDTO requestDTO)
         {
 
-            //throw new Exception("Здесь очень много технической информации");
-
             Request req = db.Requests.LastRequestId();
 
             var request = new Request
@@ -98,10 +93,6 @@ namespace RequestForm.BLL.Services
             return true;
         }
 
-
-
-
-
         public bool UpdateRequest(RequestDTO requestDTO)
         {
             var request = db.Requests.GetId(requestDTO.Number).FirstOrDefault();
@@ -116,6 +107,11 @@ namespace RequestForm.BLL.Services
 
             db.Save();
             return true;
+        }
+
+        public void Dispose()
+        {
+            db.Dispose();
         }
     }
 }

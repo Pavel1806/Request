@@ -19,35 +19,6 @@ namespace RequestForm.DAL.Repositories
         public EFUnitOfWork(DbContextOptions<AppDbContext> dbContextOptions)
         {
             appDbContext = new AppDbContext(dbContextOptions);
-
-        //    appDbContext.Add(new Request
-        //    {
-        //        DateTime = DateTime.Now,
-        //        Name = "Сергей",
-        //        SerName = "Сергеев",
-        //        Position = "электрик",
-        //        Number = 12,
-        //        Email = "1@mail.ru"
-        //    });
-        //    appDbContext.Add(new Request
-        //    {
-        //        DateTime = DateTime.Now,
-        //        Name = "Иван",
-        //        SerName = "Иванов",
-        //        Position = "сантехник",
-        //        Number = 13,
-        //        Email = "2@mail.ru"
-        //    });
-        //    appDbContext.Add(new Request
-        //    {
-        //        DateTime = DateTime.Now,
-        //        Name = "Илья",
-        //        SerName = "Ильин",
-        //        Position = "директор",
-        //        Number = 14,
-        //        Email = "3@mail.ru"
-        //    });
-        //    appDbContext.SaveChanges();
         }
 
         public IRepository<Request> Requests
@@ -58,6 +29,24 @@ namespace RequestForm.DAL.Repositories
                     requestRepository = new RequestRepository(appDbContext);
                 return requestRepository;
             }
+        }
+        private bool disposed = false;
+        public virtual void Dispose(bool desposing)
+        {
+            if(!this.disposed)
+            {
+                if(desposing)
+                {
+                    appDbContext.Dispose();
+                }
+                this.disposed = true;
+            }
+
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void Save()

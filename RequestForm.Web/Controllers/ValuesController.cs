@@ -86,7 +86,6 @@ namespace RequestForm.Web.Controllers
             };
         }
 
-
         /// <summary>
         /// Создать заявку
         /// </summary>
@@ -162,7 +161,6 @@ namespace RequestForm.Web.Controllers
 
             var requestDTO = new RequestDTO
             {
-                //DateTime=request.DateTime,
                 Number=request.Number,
                 Name = request.Name,
                 SerName = request.SerName,
